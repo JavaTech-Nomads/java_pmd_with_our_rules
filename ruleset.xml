@@ -15,7 +15,7 @@
           class="net.sourceforge.pmd.lang.java.rule.codesmells.MattsRule">
     </rule>
 
-    <rule name="Matts Rule"
+    <rule name="Our God Class Rule"
           language="java"
           message="THIS IS GOD SPEAKING"
           class="net.sourceforge.pmd.lang.java.rule.codesmells.GodClassRule">
