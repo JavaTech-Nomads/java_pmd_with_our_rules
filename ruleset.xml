@@ -9,13 +9,13 @@
         My custom rules
     </description>
 
-    <rule name="Matts Rule"
+    <rule name="MattsRule"
           language="java"
           message="THE RULE WORKS YAYAYAYAY"
           class="net.sourceforge.pmd.lang.java.rule.codesmells.MattsRule">
     </rule>
 
-    <rule name="Our God Class Rule"
+    <rule name="GodClassRule"
           language="java"
           message="THIS IS GOD SPEAKING"
           class="net.sourceforge.pmd.lang.java.rule.codesmells.GodClassRule">
