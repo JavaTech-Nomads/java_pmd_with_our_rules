@@ -2,7 +2,7 @@
  * BSD-style license; for more info see http://pmd.sourceforge.net/license.html
  */
 
-package net.sourceforge.pmd.lang.java.rule.design;
+package net.sourceforge.pmd.lang.java.rule.codesmells;
 
 
 import static net.sourceforge.pmd.lang.java.metrics.JavaMetrics.ACCESS_TO_FOREIGN_DATA;
@@ -59,9 +59,10 @@ public class GodClassRule extends AbstractJavaRulechainRule {
 
         if (wmc >= WMC_VERY_HIGH && atfd > FEW_ATFD_THRESHOLD && tcc < TCC_THRESHOLD) {
 
-            addViolation(data, node, new Object[] {wmc,
+            /*addViolation(data, node, new Object[] {wmc,
                                                    StringUtil.percentageString(tcc, 3),
-                                                   atfd, });
+                                                   atfd, });*/
+            asCtx(data).addViolation(node, new Object[] {wmc, StringUtil.percentageString(tcc, 3), atfd, });
         }
         return data;
     }

@@ -15,4 +15,10 @@
           class="net.sourceforge.pmd.lang.java.rule.codesmells.MattsRule">
     </rule>
 
+    <rule name="Matts Rule"
+          language="java"
+          message="THIS IS GOD SPEAKING"
+          class="net.sourceforge.pmd.lang.java.rule.codesmells.GodClassRule">
+    </rule>
+
 </ruleset>
