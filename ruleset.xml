@@ -9,10 +9,10 @@
         My custom rules
     </description>
 
-    <rule name="Matts Rule"
+    <rule name="FeatureEnvyRule"
           language="java"
           message="THE RULE WORKS YAYAYAYAY"
-          class="net.sourceforge.pmd.lang.java.rule.codesmells.MattsRule">
+          class="net.sourceforge.pmd.lang.java.rule.codesmells.FeatureEnvyRule">
     </rule>
 
 </ruleset>
