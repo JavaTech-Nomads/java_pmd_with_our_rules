@@ -17,7 +17,7 @@
 
     <rule name="GodClassRule"
           language="java"
-          message="THIS IS GOD SPEAKING"
+          message="This class is a potential God Class! A God Class means that a single class is taking on too many responsibilities, which can make the code harder to understand and maintain."
           class="net.sourceforge.pmd.lang.java.rule.codesmells.GodClassRule">
     </rule>
 

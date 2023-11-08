@@ -55,6 +55,17 @@ import net.sourceforge.pmd.lang.metrics.MetricsUtil;
 public final class JavaMetrics {
 
     /**
+     * These next three metrics are simple place holders used for determining the size of projects based on LOC.
+     * All metrics are based on textbook page 16 LOC/Method and NOM/Class multiplied together.
+     * Small = 28 (7 x 4)
+     * Medium = 70 (10 x 7)
+     * Large = 130 (13 x 10)
+     */
+
+     public static final int SMALL_PROJECT = 28;
+     public static final int LARGE_PROJECT = 130;
+
+    /**
      * Number of usages of foreign attributes, both directly and through accessors.
      * "Foreign" hier means "not belonging to {@code this}", although field accesses
      * to fields declared in the enclosing class are not considered foreign.

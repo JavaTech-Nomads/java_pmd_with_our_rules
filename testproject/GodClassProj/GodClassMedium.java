@@ -41,5 +41,21 @@ public class GodClass {
     public void ExportManagerDetailsToCSV() {}  
     public void ImportManagerDetailsForDb(Manager m) {
         System.out.println("doing something with m");
-    }  
+    }
+
+    public Employee getEmployee() {
+        return this.e;
+    }
+
+    public Manager getManager() {
+        return this.m;
+    }
+
+    public void setEmployee(Employee e) {
+        this.e = e;
+    }
+
+    public void setManager(Manager m) {
+        this.m = m;
+    }
 }
