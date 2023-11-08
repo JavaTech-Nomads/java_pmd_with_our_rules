@@ -5,7 +5,7 @@ import net.sourceforge.pmd.lang.java.rule.AbstractJavaRule;
 import net.sourceforge.pmd.lang.metrics.MetricsUtil;
 import static net.sourceforge.pmd.lang.java.metrics.JavaMetrics.ACCESS_TO_FOREIGN_DATA;
 
-public class FeatureEnvyRule  extends AbstractJavaRule {
+public class FeatureEnvyRule extends AbstractJavaRule {
 
     /**
      * Few means between 2 and 5. See: Lanza. Object-Oriented Metrics in Practice. Page 18.
