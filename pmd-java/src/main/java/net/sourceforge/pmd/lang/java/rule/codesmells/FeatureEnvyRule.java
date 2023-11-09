@@ -26,7 +26,7 @@ public class FeatureEnvyRule extends AbstractJavaRule {
 
     private int attribute_count = 0;
 
-    private ArrayList<Object> foreignClasses;
+    private ArrayList<Object> foreignClasses = new ArrayList<>();
 
     public FeatureEnvyRule() {
     }
