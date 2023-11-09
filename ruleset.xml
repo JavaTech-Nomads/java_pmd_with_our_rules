@@ -11,7 +11,7 @@
 
     <rule name="FeatureEnvyRule"
           language="java"
-          message="THE RULE WORKS YAYAYAYAY"
+          message="This class violates the Feature Envy design principle"
           class="net.sourceforge.pmd.lang.java.rule.codesmells.FeatureEnvyRule">
     </rule>
 

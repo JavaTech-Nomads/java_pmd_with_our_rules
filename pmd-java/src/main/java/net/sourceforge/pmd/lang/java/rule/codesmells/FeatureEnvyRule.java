@@ -24,6 +24,7 @@ public class FeatureEnvyRule extends AbstractJavaRule {
      */
     private static final double LAA_THRESHOLD = 1.0 / 3.0;
 
+    //Will be used to count the number of attributes for a class
     private int attribute_count = 0;
 
     private ArrayList<Object> foreignClasses = new ArrayList<>();
@@ -40,22 +41,23 @@ public class FeatureEnvyRule extends AbstractJavaRule {
         }
 
         int atfd = MetricsUtil.computeMetric(ACCESS_TO_FOREIGN_DATA, node);
-        /**
-        LAA is defined as "The number of attributes from the method’s definition class, divided by the
-        total number of variables accessed (including attributes used via accessor methods, see ATFD),
-        whereby the number of local attributes accessed is computed in conformity with the LAA specifications"
-        See: Lanza. Object-Oriented Metrics in Practice. Page 171
-        */
-        int laa = 0;
+        double laa = 0;
         int fdp = 0;
-        if(atfd != 0){
-            laa = attribute_count/atfd;
+        if(atfd != 0){ //Only calculate fdp and laa if atfd is non zero.
+            /**
+             LAA is defined as "The number of attributes from the method’s definition class, divided by the
+             total number of variables accessed (including attributes used via accessor methods, see ATFD),
+             whereby the number of local attributes accessed is computed in conformity with the LAA specifications"
+             See: Lanza. Object-Oriented Metrics in Practice. Page 171
+             */
+            laa = (double)attribute_count/(double)atfd;
+            /**
+             * The number of classes in which the attributes accessed — in conformity with
+             * the ATFD metric — are defined
+             * See: Lanza. Object-Oriented Metrics in Practice. Page 171
+             */
             fdp = foreignClasses.size();
         }
-
-        System.out.println("atfd = " + atfd);
-        System.out.println("laa = " + laa);
-        System.out.println("fdp = " + fdp);
 
         if(atfd > FEW_ATFD_THRESHOLD && laa < LAA_THRESHOLD && fdp <= FEW_FDP_THRESHOLD) {
             addViolation(data, node);
@@ -76,11 +78,12 @@ public class FeatureEnvyRule extends AbstractJavaRule {
 
     @Override
     public Object visit(ASTFieldAccess node, Object data) {
-        attribute_count++;
         if (isForeignField(node)) {
             if(!foreignClasses.contains(node.getClass())) {
                 foreignClasses.add(node.getClass());
             }
+        } else{
+            attribute_count++;
         }
         return super.visit(node, data);
     }
