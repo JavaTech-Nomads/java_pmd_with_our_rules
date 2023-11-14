@@ -4,12 +4,9 @@ import net.sourceforge.pmd.lang.java.ast.*;
 import net.sourceforge.pmd.lang.java.rule.AbstractJavaRule;
 import net.sourceforge.pmd.lang.java.rule.internal.JavaRuleUtil;
 import net.sourceforge.pmd.lang.java.symbols.JFieldSymbol;
-import net.sourceforge.pmd.lang.metrics.MetricsUtil;
 
 
 import java.util.ArrayList;
-
-import static net.sourceforge.pmd.lang.java.metrics.JavaMetrics.ACCESS_TO_FOREIGN_DATA;
 
 public class FeatureEnvyRule extends AbstractJavaRule {
 
@@ -24,23 +21,27 @@ public class FeatureEnvyRule extends AbstractJavaRule {
      */
     private static final double LAA_THRESHOLD = 1.0 / 3.0;
 
-    //Will be used to count the number of attributes for a class
-    private int attribute_count = 0;
+    //Used to count atfd
+    private int foreign_data_count;
 
-    private ArrayList<Object> foreignClasses = new ArrayList<>();
+    //Will be used to count the number of attributes for the method (used in LAA)
+    private int local_attribute_count;
+
+    //Used to count fdp
+    private ArrayList<String> foreignClasses;
 
     public FeatureEnvyRule() {
     }
 
     @Override
-    public Object visit(ASTClassOrInterfaceDeclaration node, Object data) {
+    public Object visit(ASTMethodDeclaration node, Object data) {
+        foreign_data_count = 0;
+        local_attribute_count = 0;
+        foreignClasses = new ArrayList<>();
+
         super.visit(node, data);
 
-        if (!MetricsUtil.supportsAll(node, ACCESS_TO_FOREIGN_DATA)) {
-            return data;
-        }
-
-        int atfd = MetricsUtil.computeMetric(ACCESS_TO_FOREIGN_DATA, node);
+        int atfd = foreign_data_count;
         double laa = 0;
         int fdp = 0;
         if(atfd != 0){ //Only calculate fdp and laa if atfd is non zero.
@@ -50,7 +51,7 @@ public class FeatureEnvyRule extends AbstractJavaRule {
              whereby the number of local attributes accessed is computed in conformity with the LAA specifications"
              See: Lanza. Object-Oriented Metrics in Practice. Page 171
              */
-            laa = (double)attribute_count/(double)atfd;
+            laa = (double) local_attribute_count /(double)atfd;
             /**
              * The number of classes in which the attributes accessed — in conformity with
              * the ATFD metric — are defined
@@ -69,25 +70,50 @@ public class FeatureEnvyRule extends AbstractJavaRule {
     @Override
     public Object visit(ASTMethodCall node, Object data) {
         if (isForeignMethod(node)) {
-            if(!foreignClasses.contains(node.getClass())) {
-                foreignClasses.add(node.getClass());
-            }
+            foreign_data_count++;
+            //TODO find a way to count fdp for method calls
         }
+
         return super.visit(node, data);
     }
 
     @Override
     public Object visit(ASTFieldAccess node, Object data) {
         if (isForeignField(node)) {
-            if(!foreignClasses.contains(node.getClass())) {
-                foreignClasses.add(node.getClass());
+            foreign_data_count++;
+
+            //Store the name of the class where this foreign field is defined, used for fdp
+            String className = node.getReferencedSym().getEnclosingClass().getSimpleName();
+            if(!foreignClasses.contains(className)) {
+                foreignClasses.add(className);
             }
-        } else{
-            attribute_count++;
+        } else {
+            /**
+             * Don't count if this node is a class, as we will then be accessing
+             * a field or a variable within the class, leading to it being counted twice
+             */
+            if(!node.getTypeMirror().isClassOrInterface()) {
+                local_attribute_count++;
+            }
         }
         return super.visit(node, data);
     }
 
+    @Override
+    public Object visit(ASTVariableAccess node, Object data) {
+        /**
+         * Don't count if this node is a class, as we will then be accessing
+         * a field or a variable within the class, leading to it being counted twice
+         */
+        if(!node.getTypeMirror().isClassOrInterface()) {
+            local_attribute_count++;
+        }
+        return super.visit(node, data);
+    }
+
+    /**
+     * Taken from net/sourceforge/pmd/lang/java/metrics/internal/AtfdBaseVisitor.java
+     */
     private boolean isForeignField(ASTFieldAccess node) {
         JFieldSymbol sym = node.getReferencedSym();
         if (sym == null || sym.isStatic()) {
@@ -100,6 +126,9 @@ public class FeatureEnvyRule extends AbstractJavaRule {
         );
     }
 
+    /**
+     * Taken from net/sourceforge/pmd/lang/java/metrics/internal/AtfdBaseVisitor.java
+     */
     private boolean isForeignMethod(ASTMethodCall node) {
         return JavaRuleUtil.isGetterOrSetterCall(node)
                 && node.getQualifier() != null
