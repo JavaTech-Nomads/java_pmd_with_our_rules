@@ -60,6 +60,12 @@ public class FeatureEnvyRule extends AbstractJavaRule {
             fdp = foreignClasses.size();
         }
 
+        System.out.println("atfd: " + atfd);
+        System.out.println("laa: " + laa);
+        System.out.println("attributes: " + local_attribute_count);
+        System.out.println("fdp: " + fdp);
+        System.out.println("");
+
         if(atfd > FEW_ATFD_THRESHOLD && laa < LAA_THRESHOLD && fdp <= FEW_FDP_THRESHOLD) {
             addViolation(data, node);
         }
